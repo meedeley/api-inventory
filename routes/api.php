@@ -14,7 +14,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
   Route::apiResource('/kategori', CategoryController::class)->except('create', 'edit');
-  Route::apiResource('/supplier', SupplierController::class)->except('create', 'edit')
+  Route::apiResource('/supplier', SupplierController::class)->except('create', 'edit');
 
 });
 
