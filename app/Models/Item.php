@@ -10,7 +10,9 @@ class Item extends Model
         "category_id",
         "name",
         "price",
+        "quantity",
         "description"
+
     ];
 
     public function category()
