@@ -19,4 +19,9 @@ class Item extends Model
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
+
+    public function transactions()
+    {
+        return $this->belongsToMany(Transaction::class, 'transaction_detail')->withPivot(['quantity', 'subtotal'])->withTimestamps();
+    }
 }

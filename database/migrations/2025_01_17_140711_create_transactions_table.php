@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->enum('transaction_type', ['in', 'out']);
+            $table->date('transaction_date');
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('supplier_id')->nullable()->constrained();
+            $table->foreignId('customer_id')->nullable()->constrained();
+            $table->integer('total_amount');
+
             $table->timestamps();
         });
     }
