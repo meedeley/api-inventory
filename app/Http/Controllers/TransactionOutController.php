@@ -38,7 +38,7 @@ class TransactionOutController extends Controller
         $validated = Validator::make($getRequest, [
             'transaction_type' => 'required|in:out',
             'transaction_date' => 'required|date',
-            'supplier_id' => 'nullable|exists:suppliers,id',
+            'customer_id' => 'nullable|exists:customers,id',
             'items' => 'required|array',
         ]);
 
@@ -52,7 +52,7 @@ class TransactionOutController extends Controller
         $userId = $request->user()->id;
 
         $transaction = Transaction::create([
-            'transaction_type' => $request->transaction_type,
+            'transaction_type' => "out",
             'transaction_date' => $request->transaction_date,
             'user_id' => $userId,
             'supplier_id' => $request->supplier_id,
@@ -71,7 +71,7 @@ class TransactionOutController extends Controller
                 "subtotal" => $subtotal
             ]);
 
-            $quantityAdded = $itemData->quantity + $item['quantity'];
+            $quantityAdded = $itemData->quantity - $item['quantity'];
 
             $itemData->update([
                 "quantity" => $quantityAdded
@@ -96,9 +96,8 @@ class TransactionOutController extends Controller
 
 
         $validated = Validator::make($getRequest, [
-            'transaction_type' => 'required|in:in',
             'transaction_date' => 'required|date',
-            'supplier_id' => 'nullable|exists:suppliers,id',
+            'customer_id' => 'nullable|exists:customers,id',
             'items' => 'required|array',
             'items.*.id' => 'required|exists:items,id',
             'items.*.quantity' => 'required|integer|min:1',
@@ -115,9 +114,9 @@ class TransactionOutController extends Controller
         $syncData = [];
 
         $transaction->update([
-            'transaction_type' => $request->transaction_type,
+            'transaction_type' => "out",
             'transaction_date' => $request->transaction_date,
-            'supplier_id' => $request->supplier_id,
+            'customer_id' => $request->customer_id,
         ]);
 
         foreach ($transaction->items as $item) {
@@ -136,7 +135,7 @@ class TransactionOutController extends Controller
             ];
 
             $itemData->update([
-                "quantity" => $itemData->quantity + $item['quantity']
+                "quantity" => $itemData->quantity - $item['quantity']
             ]);
 
             $totalAmount += $subtotal;
@@ -159,7 +158,7 @@ class TransactionOutController extends Controller
         $barang_masuk->delete();
 
         return response()->json([
-            "status" => "menghapus data barang masuk",
+            "status" => "menghapus data barang keluar",
             "data" => $barang_masuk->load('items')
         ]);
     }
